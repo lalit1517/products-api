@@ -12,10 +12,10 @@ app.use(cors());
 
 app.use("/public", express.static(path.join(__dirname, "public")));
 
+const mongoUrl = process.env.MONGO_URL;
+
 mongoose
-  .connect(
-    "mongodb+srv://lalitchauhan__:hilalit@todolist.akglz1b.mongodb.net/ecommerce"
-  )
+  .connect(mongoUrl)
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
