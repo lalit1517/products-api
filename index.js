@@ -1,13 +1,51 @@
 const express = require("express");
+const mongoose = require("mongoose");
+const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
-const app = express();
 
+const app = express();
+const port = 5000;
+
+app.use(bodyParser.json());
 app.use(cors());
 
-const port = process.env.PORT || 3000;
-
 app.use("/public", express.static(path.join(__dirname, "public")));
+
+mongoose
+  .connect(
+    "mongodb+srv://lalitchauhan__:hilalit@todolist.akglz1b.mongodb.net/ecommerce"
+  )
+  .then(() => console.log("MongoDB connected successfully"))
+  .catch((err) => console.log("MongoDB connection error:", err));
+
+  const orderSchema = new mongoose.Schema({
+    userId: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    address: {
+      houseNo: { type: String, required: true },
+      street: { type: String, required: true },
+      city: { type: String, required: true },
+      state: { type: String, required: true },
+    },
+    items: [
+      {
+        sku: { type: String, required: true },
+        name: { type: String, required: true },
+        quantity: { type: Number, required: true },
+        price: { type: Number, required: true },
+      },
+    ],
+    totalPrice: { type: String, required: true },
+    paymentId: { type: String, required: true },
+    paymentStatus: { type: Boolean, required: true },
+    orderDate: { type: String, required: true },
+    expectedArrivalDate: { type: String, required: true }
+  });
+  
+  const Order = mongoose.model("Order", orderSchema);
 
 const products = [
   {
@@ -278,6 +316,37 @@ app.get("/api/products/:sku", (req, res) => {
     res.json(product);
   } else {
     res.status(404).json({ message: "Product not found" });
+  }
+});
+
+app.post("/api/order", async (req, res) => {
+  try {
+
+    if (!req.body.userId) {
+      return res.status(400).json({ error: "User ID is required" });
+    }
+
+    const order = new Order(req.body);
+    await order.save();
+    res.status(201).json({ message: "Order saved successfully!" });
+  } catch (error) {
+    console.error("Error saving order:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to save order", details: error.message });
+  }
+});
+
+app.get("/api/orders/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const orders = await Order.find({ userId });
+    res.status(200).json(orders);
+  } catch (error) {
+    console.error("Error fetching orders:", error);
+    res
+      .status(500)
+      .json({ error: "Failed to fetch orders", details: error.message });
   }
 });
 
