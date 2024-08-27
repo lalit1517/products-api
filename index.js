@@ -15,7 +15,7 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 const mongoUrl = process.env.MONGO_URL;
 
 mongoose
-  .connect(mongoUrl)
+  .connect("mongodb+srv://lalitchauhan__:hilalit@todolist.akglz1b.mongodb.net/ecommerce")
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
@@ -39,8 +39,7 @@ mongoose
       },
     ],
     totalPrice: { type: String, required: true },
-    paymentId: { type: String, required: true },
-    paymentStatus: { type: Boolean, required: true },
+    paymentMode: { type: String, required: true },
     orderDate: { type: String, required: true },
     expectedArrivalDate: { type: String, required: true }
   });
