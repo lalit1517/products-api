@@ -3,6 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const path = require("path");
 const cors = require("cors");
+require('dotenv').config();
 
 const app = express();
 const port = 5000;
@@ -15,7 +16,7 @@ app.use("/public", express.static(path.join(__dirname, "public")));
 const mongoUrl = process.env.MONGO_URL;
 
 mongoose
-  .connect("mongodb+srv://lalitchauhan__:hilalit@todolist.akglz1b.mongodb.net/ecommerce")
+  .connect(mongoUrl)
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
