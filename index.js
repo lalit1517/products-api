@@ -40,7 +40,8 @@ mongoose
       },
     ],
     totalPrice: { type: String, required: true },
-    paymentMode: { type: String, required: true },
+    paymentId: { type: String, required: true },
+    paymentStatus: { type: Boolean, required: true },
     orderDate: { type: String, required: true },
     expectedArrivalDate: { type: String, required: true }
   });
