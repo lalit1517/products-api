@@ -20,34 +20,30 @@ mongoose
   .then(() => console.log("MongoDB connected successfully"))
   .catch((err) => console.log("MongoDB connection error:", err));
 
-  const orderSchema = new mongoose.Schema({
-    userId: { type: String, required: true },
-    name: { type: String, required: true },
-    email: { type: String, required: true },
-    phone: { type: String, required: true },
-    address: {
-      houseNo: { type: String, required: true },
-      street: { type: String, required: true },
-      city: { type: String, required: true },
-      pinCode: { type: String, required: true },
-      state: { type: String, required: true },
-    },
-    items: [
-      {
-        sku: { type: String, required: true },
-        name: { type: String, required: true },
-        quantity: { type: Number, required: true },
-        price: { type: Number, required: true },
-      },
-    ],
-    totalPrice: { type: String, required: true },
-    paymentId: { type: String, required: true },
-    paymentStatus: { type: Boolean, required: true },
-    orderDate: { type: String, required: true },
-    expectedArrivalDate: { type: String, required: true }
-  });
-  
-  const Order = mongoose.model("Order", orderSchema);
+const orderSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true },
+  phone: { type: String, required: true },
+  address: {
+    houseNo: { type: String, required: true },
+    street: { type: String, required: true },
+    city: { type: String, required: true },
+    pinCode: { type: String, required: true },
+    state: { type: String, required: true },
+  },
+  sku: { type: String, required: true },
+  itemName: { type: String, required: true },
+  quantity: { type: Number, required: true },
+  price: { type: Number, required: true },
+  totalPrice: { type: String, required: true },
+  paymentId: { type: String, required: true },
+  paymentStatus: { type: Boolean, required: true },
+  orderDate: { type: String, required: true },
+  expectedArrivalDate: { type: String, required: true }
+});
+
+const Order = mongoose.model("Order", orderSchema);
 
 const products = [
   {
