@@ -50,7 +50,7 @@ const cartItemSchema = new mongoose.Schema({
   name: { type: String, required: true },
   price: { type: Number, required: true },
   qty: { type: Number, required: true },
-});
+}, { versionKey: false });
 
 const cartSchema = new mongoose.Schema({
   userId: { type: String, required: true },
@@ -398,7 +398,7 @@ app.post('/api/cart/:userId', async (req, res) => {
       userCart = new Cart({ userId, cart });
       await userCart.save();
     }
-
+    console.log('Cart updated successfully:', userCart);
     res.status(200).json({ message: 'Cart updated successfully', cart: userCart });
   } catch (error) {
     res.status(500).json({ message: 'Error updating cart', error });
