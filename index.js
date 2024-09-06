@@ -45,6 +45,20 @@ const orderSchema = new mongoose.Schema({
 
 const Order = mongoose.model("Order", orderSchema);
 
+const cartItemSchema = new mongoose.Schema({
+  sku: { type: String, required: true },
+  name: { type: String, required: true },
+  price: { type: Number, required: true },
+  qty: { type: Number, required: true },
+});
+
+const cartSchema = new mongoose.Schema({
+  userId: { type: String, required: true },
+  cart: [cartItemSchema],
+});
+
+const Cart = mongoose.model('Cart', cartSchema);
+
 const products = [
   {
     sku: "item0001",
@@ -345,6 +359,49 @@ app.get("/api/orders/:userId", async (req, res) => {
     res
       .status(500)
       .json({ error: "Failed to fetch orders", details: error.message });
+  }
+});
+
+app.get('/api/cart/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  if (!userId) {
+    return res.status(400).json({ message: 'User ID is required' });
+  }
+
+  try {
+    const cart = await Cart.findOne({ userId });
+    if (!cart) {
+      return res.status(404).json({ message: 'Cart not found' });
+    }
+    res.status(200).json(cart);
+  } catch (error) {
+    res.status(500).json({ message: 'Error fetching cart', error });
+  }
+});
+
+app.post('/api/cart/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const { cart } = req.body;
+
+  if (!userId) {
+    return res.status(400).json({ message: 'User ID is required' });
+  }
+
+  try {
+    let userCart = await Cart.findOne({ userId });
+
+    if (userCart) {
+      userCart.cart = cart;
+      await userCart.save();
+    } else {
+      userCart = new Cart({ userId, cart });
+      await userCart.save();
+    }
+
+    res.status(200).json({ message: 'Cart updated successfully', cart: userCart });
+  } catch (error) {
+    res.status(500).json({ message: 'Error updating cart', error });
   }
 });
 
